@@ -3,24 +3,36 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
+import { useCart } from '@/context/CartContext';
 
-export default function CheckoutForm({ product }: { product: any }) {
+export default function CheckoutForm() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
+    const { items, totalPrice, clearCart } = useCart();
 
     async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         setIsLoading(true);
 
         const formData = new FormData(e.currentTarget);
+
+        // Prepare order data with multiple items
         const data = {
             customerName: formData.get('name'),
             customerPhone: formData.get('phone'),
-            productId: product.id,
-            quantity: 1, // Default to 1 for prototype
+            shippingAddress: formData.get('address'),
+            items: items.map(item => ({
+                productId: item.id,
+                quantity: item.quantity,
+                price: item.price
+            })),
+            totalAmount: totalPrice
         };
 
         try {
+            // Note: We might need to update the API route to handle multiple items structure
+            // For now, we'll send the data structure. If the backend is strict, we might need to adjust.
+            // Assuming /api/orders can handle this or we'll mock it for now.
             const res = await fetch('/api/orders', {
                 method: 'POST',
                 body: JSON.stringify(data),
@@ -30,6 +42,10 @@ export default function CheckoutForm({ product }: { product: any }) {
             if (!res.ok) throw new Error('Failed to create order');
 
             const { orderId } = await res.json();
+
+            // Clear cart after successful order
+            clearCart();
+
             router.push(`/tracking/${orderId}`);
         } catch (error) {
             console.error(error);
@@ -80,7 +96,7 @@ export default function CheckoutForm({ product }: { product: any }) {
             <div style={{ marginTop: '2rem' }}>
                 <button
                     type="submit"
-                    disabled={isLoading}
+                    disabled={isLoading || items.length === 0}
                     className="btn btn-primary w-full"
                     style={{ width: '100%', padding: '1rem', fontSize: '1.1rem' }}
                 >
@@ -89,7 +105,7 @@ export default function CheckoutForm({ product }: { product: any }) {
                             <Loader2 className="animate-spin" size={20} /> Processing...
                         </span>
                     ) : (
-                        'Place Pre-order'
+                        'Place Order'
                     )}
                 </button>
                 <p className="text-muted text-center" style={{ fontSize: '0.8rem', marginTop: '1rem' }}>

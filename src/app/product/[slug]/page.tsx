@@ -2,6 +2,7 @@ import { prisma } from '@/lib/db';
 import Link from 'next/link';
 import { ArrowLeft, Check, Truck } from 'lucide-react';
 import { notFound } from 'next/navigation';
+import AddToCart from '@/components/AddToCart';
 
 export default async function ProductPage({
     params,
@@ -50,7 +51,7 @@ export default async function ProductPage({
                         </div>
 
                         <div className="product-features">
-                            <h3 style={{ fontWeight: 'bold', marginBottom: '1rem' }}>Why Pre-order?</h3>
+                            <h3 style={{ fontWeight: 'bold', marginBottom: '1rem' }}>Why Buy From Us?</h3>
                             <ul style={{ listStyle: 'none' }}>
                                 <li className="feature-item">
                                     <Check size={18} className="text-primary" style={{ marginTop: '2px' }} />
@@ -67,17 +68,8 @@ export default async function ProductPage({
                             </ul>
                         </div>
 
-                        <div className="flex gap-4">
-                            <Link
-                                href={`/checkout?productId=${product.id}`}
-                                className="btn btn-primary"
-                                style={{ flex: 1, padding: '1rem' }}
-                            >
-                                Pre-order Now
-                            </Link>
-                            <button className="btn btn-secondary">
-                                Ask via WhatsApp
-                            </button>
+                        <div style={{ marginTop: '2rem' }}>
+                            <AddToCart product={product} />
                         </div>
                         <p className="text-muted text-center" style={{ fontSize: '0.8rem', marginTop: '1rem' }}>
                             *Estimated processing time: 3-5 days.

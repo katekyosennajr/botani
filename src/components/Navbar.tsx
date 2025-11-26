@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ShoppingBag, Search, X, Loader2, Truck } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { useCart } from '@/context/CartContext';
 
 interface SearchSuggestion {
     id: string;
@@ -19,6 +20,7 @@ export default function Navbar() {
     const [isLoading, setIsLoading] = useState(false);
     const searchInputRef = useRef<HTMLInputElement>(null);
     const router = useRouter();
+    const { totalItems } = useCart();
 
     // Focus input when search opens
     useEffect(() => {
@@ -105,20 +107,22 @@ export default function Navbar() {
 
                         <Link href="/cart" className="relative nav-icon-btn">
                             <ShoppingBag size={20} />
-                            <span style={{
-                                position: 'absolute',
-                                top: '0',
-                                right: '0',
-                                backgroundColor: 'var(--color-primary)',
-                                color: 'white',
-                                fontSize: '10px',
-                                width: '16px',
-                                height: '16px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                borderRadius: '50%'
-                            }}>0</span>
+                            {totalItems > 0 && (
+                                <span style={{
+                                    position: 'absolute',
+                                    top: '0',
+                                    right: '0',
+                                    backgroundColor: 'var(--color-primary)',
+                                    color: 'white',
+                                    fontSize: '10px',
+                                    width: '16px',
+                                    height: '16px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    borderRadius: '50%'
+                                }}>{totalItems}</span>
+                            )}
                         </Link>
                     </div>
                 </div>
