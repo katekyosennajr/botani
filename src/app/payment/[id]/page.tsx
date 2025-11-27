@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { CheckCircle, QrCode, Clock, AlertCircle } from 'lucide-react';
 
-export default function PaymentPage({ params }: { params: { id: string } }) {
+export default function PaymentPage({ params }: { params: Promise<{ id: string }> }) {
     const router = useRouter();
+    const { id } = use(params);
     const [order, setOrder] = useState<any>(null);
     const [paymentStatus, setPaymentStatus] = useState('pending');
     const [showQRCode, setShowQRCode] = useState(true);
@@ -15,7 +16,7 @@ export default function PaymentPage({ params }: { params: { id: string } }) {
         // Fetch order details
         const fetchOrder = async () => {
             try {
-                const res = await fetch(`/api/orders/${params.id}`);
+                const res = await fetch(`/api/orders/${id}`);
                 if (res.ok) {
                     const data = await res.json();
                     setOrder(data);
@@ -29,14 +30,14 @@ export default function PaymentPage({ params }: { params: { id: string } }) {
         };
 
         fetchOrder();
-    }, [params.id]);
+    }, [id]);
 
     const handleConfirmPayment = async () => {
         setShowQRCode(false);
         setPaymentStatus('processing');
 
         try {
-            const res = await fetch(`/api/orders/${params.id}/confirm-payment`, {
+            const res = await fetch(`/api/orders/${id}/confirm-payment`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -45,7 +46,7 @@ export default function PaymentPage({ params }: { params: { id: string } }) {
                 setPaymentStatus('paid');
                 // Redirect to tracking after 2 seconds
                 setTimeout(() => {
-                    router.push(`/tracking/${params.id}`);
+                    router.push(`/tracking/${id}`);
                 }, 2000);
             }
         } catch (error) {
