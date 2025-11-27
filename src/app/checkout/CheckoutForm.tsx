@@ -84,7 +84,18 @@ export default function CheckoutForm() {
                 return;
             }
 
-            // Trigger Midtrans Snap payment
+            // Check if this is a mock token (for development)
+            const isMockToken = snapToken.startsWith('mock_');
+
+            if (isMockToken) {
+                // Development mode: skip snap popup, go directly to tracking
+                console.log('Using mock token for development');
+                clearCart();
+                router.push(`/tracking/${orderId}`);
+                return;
+            }
+
+            // Trigger Midtrans Snap payment (real token)
             (window as any).snap.pay(snapToken, {
                 onSuccess: (result: any) => {
                     console.log('Payment success:', result);
