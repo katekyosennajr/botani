@@ -1,7 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
@@ -26,22 +25,31 @@ interface SnapCallback {
 export default function CheckoutForm() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
+    const [snapReady, setSnapReady] = useState(false);
     const { items, totalPrice, clearCart } = useCart();
 
-    // Debug: Check if snap is available
-    React.useEffect(() => {
+    // Check if snap script is loaded
+    useEffect(() => {
         const checkSnap = setInterval(() => {
-            if ((window as any).snap) {
-                console.log('✓ Midtrans Snap is available');
+            if (typeof (window as any).snap !== 'undefined') {
+                console.log('✓ Midtrans Snap is ready');
+                setSnapReady(true);
                 clearInterval(checkSnap);
             }
         }, 100);
 
+        // Cleanup
         return () => clearInterval(checkSnap);
     }, []);
 
     async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
+
+        if (!snapReady) {
+            alert('Payment gateway is loading. Please try again.');
+            return;
+        }
+
         setIsLoading(true);
 
         const formData = new FormData(e.currentTarget);
@@ -70,56 +78,34 @@ export default function CheckoutForm() {
 
             const { orderId, snapToken } = await res.json();
 
-            // Wait for snap script to be available
-            const waitForSnap = (attempts = 0): boolean => {
-                if ((window as any).snap) {
-                    return true;
-                }
-                if (attempts > 50) {
-                    return false;
-                }
-                // Try again after short delay
-                return false;
-            };
+            if (!snapToken) {
+                alert('Failed to generate payment token. Please try again.');
+                setIsLoading(false);
+                return;
+            }
 
-            // Give snap script time to load
-            setTimeout(() => {
-                if (!snapToken) {
-                    alert('Payment gateway not available. Please try again.');
+            // Trigger Midtrans Snap payment
+            (window as any).snap.pay(snapToken, {
+                onSuccess: (result: any) => {
+                    console.log('Payment success:', result);
+                    clearCart();
+                    router.push(`/tracking/${orderId}`);
+                },
+                onPending: (result: any) => {
+                    console.log('Payment pending:', result);
+                    clearCart();
+                    router.push(`/tracking/${orderId}`);
+                },
+                onError: (result: any) => {
+                    console.error('Payment error:', result);
+                    alert('Payment failed. Please try again.');
                     setIsLoading(false);
-                    return;
-                }
-
-                if (typeof (window as any).snap === 'undefined') {
-                    console.error('Midtrans Snap is not loaded');
-                    alert('Payment gateway not available. Please try again.');
+                },
+                onClose: () => {
+                    console.log('Payment popup closed by user');
                     setIsLoading(false);
-                    return;
                 }
-
-                // Snap is available, trigger payment
-                (window as any).snap.pay(snapToken, {
-                    onSuccess: (result: any) => {
-                        console.log('Payment success:', result);
-                        clearCart();
-                        router.push(`/tracking/${orderId}`);
-                    },
-                    onPending: (result: any) => {
-                        console.log('Payment pending:', result);
-                        clearCart();
-                        router.push(`/tracking/${orderId}`);
-                    },
-                    onError: (result: any) => {
-                        console.error('Payment error:', result);
-                        alert('Payment failed. Please try again.');
-                        setIsLoading(false);
-                    },
-                    onClose: () => {
-                        console.log('Payment popup closed by user');
-                        setIsLoading(false);
-                    }
-                });
-            }, 500);
+            });
         } catch (error) {
             console.error(error);
             alert('Something went wrong. Please try again.');
@@ -168,7 +154,7 @@ export default function CheckoutForm() {
             <div style={{ marginTop: '2rem' }}>
                 <button
                     type="submit"
-                    disabled={isLoading || items.length === 0}
+                    disabled={isLoading || items.length === 0 || !snapReady}
                     className="btn btn-primary w-full"
                     style={{ width: '100%', padding: '1rem', fontSize: '1.1rem' }}
                 >
@@ -176,6 +162,8 @@ export default function CheckoutForm() {
                         <span className="flex items-center gap-2">
                             <Loader2 className="animate-spin" size={20} /> Processing...
                         </span>
+                    ) : !snapReady ? (
+                        'Loading payment gateway...'
                     ) : (
                         'Place Order'
                     )}
