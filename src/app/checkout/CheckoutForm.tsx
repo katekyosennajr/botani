@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
@@ -26,6 +27,18 @@ export default function CheckoutForm() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const { items, totalPrice, clearCart } = useCart();
+
+    // Debug: Check if snap is available
+    React.useEffect(() => {
+        const checkSnap = setInterval(() => {
+            if ((window as any).snap) {
+                console.log('✓ Midtrans Snap is available');
+                clearInterval(checkSnap);
+            }
+        }, 100);
+
+        return () => clearInterval(checkSnap);
+    }, []);
 
     async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -57,9 +70,35 @@ export default function CheckoutForm() {
 
             const { orderId, snapToken } = await res.json();
 
-            // Show Midtrans Snap payment popup
-            if (snapToken && window.snap) {
-                window.snap.pay(snapToken, {
+            // Wait for snap script to be available
+            const waitForSnap = (attempts = 0): boolean => {
+                if ((window as any).snap) {
+                    return true;
+                }
+                if (attempts > 50) {
+                    return false;
+                }
+                // Try again after short delay
+                return false;
+            };
+
+            // Give snap script time to load
+            setTimeout(() => {
+                if (!snapToken) {
+                    alert('Payment gateway not available. Please try again.');
+                    setIsLoading(false);
+                    return;
+                }
+
+                if (typeof (window as any).snap === 'undefined') {
+                    console.error('Midtrans Snap is not loaded');
+                    alert('Payment gateway not available. Please try again.');
+                    setIsLoading(false);
+                    return;
+                }
+
+                // Snap is available, trigger payment
+                (window as any).snap.pay(snapToken, {
                     onSuccess: (result: any) => {
                         console.log('Payment success:', result);
                         clearCart();
@@ -77,16 +116,10 @@ export default function CheckoutForm() {
                     },
                     onClose: () => {
                         console.log('Payment popup closed by user');
-                        // User closed popup without completing payment
-                        // Stay on checkout, don't redirect
                         setIsLoading(false);
                     }
                 });
-            } else {
-                // Fallback if snap token not available
-                alert('Payment gateway not available. Please try again.');
-                setIsLoading(false);
-            }
+            }, 500);
         } catch (error) {
             console.error(error);
             alert('Something went wrong. Please try again.');
