@@ -275,8 +275,6 @@ img {
   padding: var(--spacing-md);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
-  position: sticky;
-  top: 6rem;
 }
 
 .summary-item {

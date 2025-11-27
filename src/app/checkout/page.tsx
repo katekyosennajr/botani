@@ -51,18 +51,12 @@ export default function CheckoutPage() {
                     {/* Checkout Form */}
                     <div className="checkout-form-container">
                         <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1.5rem' }}>Customer Details</h2>
-                        {/* We pass the first item as a 'product' prop to satisfy the existing form interface for now, 
-                            but ideally CheckoutForm should be refactored to handle the whole cart order logic. 
-                            For this step, we'll let CheckoutForm handle the user input and we'll handle the order creation logic later. 
-                            Wait, CheckoutForm likely expects a single product. I need to check CheckoutForm.tsx. 
-                            Assuming I need to refactor CheckoutForm too, but let's first fix the page structure.
-                        */}
                         <CheckoutForm />
                     </div>
 
-                    {/* Order Summary */}
-                    <div>
-                        <div className="order-summary">
+                    {/* Order Summary - NOT STICKY */}
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        <div className="order-summary" style={{ position: 'static' }}>
                             <h2 style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '1rem' }}>Order Summary</h2>
 
                             <div style={{ maxHeight: '300px', overflowY: 'auto', marginBottom: '1rem', paddingRight: '0.5rem' }}>
