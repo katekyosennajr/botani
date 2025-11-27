@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { CartProvider } from "@/context/CartContext";
+import MidtransScript from "@/components/MidtransScript";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-body" });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-heading" });
@@ -28,11 +29,7 @@ export default function RootLayout({
           </main>
           <Footer />
         </CartProvider>
-        {/* Midtrans Snap.js */}
-        <script
-          src="https://app.sandbox.midtrans.com/snap/snap.js"
-          data-client-key={process.env.MIDTRANS_CLIENT_KEY}
-        ></script>
+        <MidtransScript />
       </body>
     </html>
   );
