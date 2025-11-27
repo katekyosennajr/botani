@@ -88,10 +88,10 @@ export default function CheckoutForm() {
             const isMockToken = snapToken.startsWith('mock_');
 
             if (isMockToken) {
-                // Development mode: skip snap popup, go directly to tracking
+                // Development mode: redirect to payment simulator instead of tracking
                 console.log('Using mock token for development');
                 clearCart();
-                router.push(`/tracking/${orderId}`);
+                router.push(`/payment/${orderId}`);
                 return;
             }
 
