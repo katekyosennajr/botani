@@ -93,22 +93,20 @@ export default async function OrderStatusPage({
                             {/* Payment / QRIS */}
                             <div>
                                 <h2 style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '1rem' }}>Payment</h2>
-                                {order.paymentStatus === 'UNPAID' && order.qrisString ? (
-                                    <div className="text-center">
-                                        <div style={{ background: 'white', padding: '1rem', border: '1px solid #eee', borderRadius: 'var(--radius-md)', display: 'inline-block', marginBottom: '1rem' }}>
-                                            <img
-                                                src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(order.qrisString)}`}
-                                                alt="QRIS Code"
-                                                style={{ width: '12rem', height: '12rem' }}
-                                            />
-                                        </div>
-                                        <p className="text-muted" style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}>Scan with any banking app</p>
-                                        <p style={{ fontSize: '0.8rem', color: '#9ca3af' }}>Expires in 24 hours</p>
-                                    </div>
-                                ) : (
+                                {order.paymentStatus === 'PAID' ? (
                                     <div style={{ backgroundColor: '#dcfce7', color: '#166534', padding: '1rem', borderRadius: 'var(--radius-md)', textAlign: 'center' }}>
                                         <CheckCircle style={{ margin: '0 auto 0.5rem auto' }} />
                                         <p style={{ fontWeight: 'bold' }}>Payment Successful</p>
+                                    </div>
+                                ) : (
+                                    <div className="text-center">
+                                        <div style={{ backgroundColor: '#fef3c7', color: '#92400e', padding: '1rem', borderRadius: 'var(--radius-md)', marginBottom: '1rem' }}>
+                                            <Clock style={{ margin: '0 auto 0.5rem auto' }} />
+                                            <p style={{ fontWeight: 'bold' }}>Waiting for Payment</p>
+                                        </div>
+                                        <p className="text-muted" style={{ fontSize: '0.9rem' }}>
+                                            Please complete your payment via the popup window.
+                                        </p>
                                     </div>
                                 )}
                             </div>

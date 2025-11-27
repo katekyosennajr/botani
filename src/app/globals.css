@@ -814,7 +814,88 @@ img {
   left: 0;
   right: 0;
   z-index: 100;
-  padding: var(--spacing-sm) 0;
+  padding: 1rem 0;
+  transition: all 0.3s ease;
+  background-color: var(--color-primary);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.navbar.scrolled {
+  padding: 0.75rem 0;
+  box-shadow: var(--shadow-lg);
+}
+
+.navbar-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: var(--font-heading);
+  color: white;
+  letter-spacing: 0.05em;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-link {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+  transition: all 0.2s;
+  font-size: 0.95rem;
+}
+
+.nav-link:hover {
+  color: white;
+  opacity: 1;
+}
+
+.nav-icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  color: white;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-icon-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.mobile-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 1rem;
+  border-top: 1px solid #eee;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.mobile-nav-link {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-text);
+  padding: 0.5rem 0;
 }
 
 .navbar-glass {
@@ -830,23 +911,9 @@ img {
   margin: 0 var(--spacing-md);
 }
 
-.nav-icon-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 50%;
-  color: var(--color-text);
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
-.nav-icon-btn:hover {
-  background-color: rgba(45, 74, 62, 0.05);
-  color: var(--color-primary);
-}
+
+
 
 /* --- Cart Page --- */
 .cart-grid {
@@ -1410,121 +1477,121 @@ img {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   text-align: center;
   font-size: 0.8rem;
+}
 
-  /* --- Added Utility Classes --- */
-  .mt-1 {
-    margin-top: 0.25rem;
-  }
+/* --- Added Utility Classes --- */
+.mt-1 {
+  margin-top: 0.25rem;
+}
 
-  .mt-2 {
-    margin-top: 0.5rem;
-  }
+.mt-2 {
+  margin-top: 0.5rem;
+}
 
-  .mt-4 {
-    margin-top: 1rem;
-  }
+.mt-4 {
+  margin-top: 1rem;
+}
 
-  .mt-6 {
-    margin-top: 1.5rem;
-  }
+.mt-6 {
+  margin-top: 1.5rem;
+}
 
-  .mt-8 {
-    margin-top: 2rem;
-  }
+.mt-8 {
+  margin-top: 2rem;
+}
 
-  .mt-12 {
-    margin-top: 3rem;
-  }
+.mt-12 {
+  margin-top: 3rem;
+}
 
-  .mb-1 {
-    margin-bottom: 0.25rem;
-  }
+.mb-1 {
+  margin-bottom: 0.25rem;
+}
 
-  .mb-2 {
-    margin-bottom: 0.5rem;
-  }
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
 
-  .mb-4 {
-    margin-bottom: 1rem;
-  }
+.mb-4 {
+  margin-bottom: 1rem;
+}
 
-  .mb-6 {
-    margin-bottom: 1.5rem;
-  }
+.mb-6 {
+  margin-bottom: 1.5rem;
+}
 
-  .mb-8 {
-    margin-bottom: 2rem;
-  }
+.mb-8 {
+  margin-bottom: 2rem;
+}
 
-  .text-xs {
-    font-size: 0.75rem;
-  }
+.text-xs {
+  font-size: 0.75rem;
+}
 
-  .text-sm {
-    font-size: 0.875rem;
-  }
+.text-sm {
+  font-size: 0.875rem;
+}
 
-  .text-lg {
-    font-size: 1.125rem;
-  }
+.text-lg {
+  font-size: 1.125rem;
+}
 
-  .text-xl {
-    font-size: 1.25rem;
-  }
+.text-xl {
+  font-size: 1.25rem;
+}
 
-  .text-right {
-    text-align: right;
-  }
+.text-right {
+  text-align: right;
+}
 
-  .text-center {
-    text-align: center;
-  }
+.text-center {
+  text-align: center;
+}
 
-  .w-full {
-    width: 100%;
-  }
+.w-full {
+  width: 100%;
+}
 
-  .h-full {
-    height: 100%;
-  }
+.h-full {
+  height: 100%;
+}
 
-  .flex {
-    display: flex;
-  }
+.flex {
+  display: flex;
+}
 
-  .items-center {
-    align-items: center;
-  }
+.items-center {
+  align-items: center;
+}
 
-  .justify-center {
-    justify-content: center;
-  }
+.justify-center {
+  justify-content: center;
+}
 
-  .justify-between {
-    justify-content: space-between;
-  }
+.justify-between {
+  justify-content: space-between;
+}
 
-  .gap-2 {
-    gap: 0.5rem;
-  }
+.gap-2 {
+  gap: 0.5rem;
+}
 
-  .gap-4 {
-    gap: 1rem;
-  }
+.gap-4 {
+  gap: 1rem;
+}
 
-  .font-medium {
-    font-weight: 500;
-  }
+.font-medium {
+  font-weight: 500;
+}
 
-  .font-bold {
-    font-weight: 700;
-  }
+.font-bold {
+  font-weight: 700;
+}
 
-  .uppercase {
-    text-transform: uppercase;
-  }
+.uppercase {
+  text-transform: uppercase;
+}
 
-  .tracking-wide {
-    letter-spacing: 0.025em;
-  }
+.tracking-wide {
+  letter-spacing: 0.025em;
 }
