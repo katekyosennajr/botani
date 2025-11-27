@@ -57,18 +57,17 @@ export default function CheckoutForm() {
 
             const { orderId, snapToken } = await res.json();
 
-            // Clear cart after successful order
-            clearCart();
-
             // Show Midtrans Snap payment popup
             if (snapToken && window.snap) {
                 window.snap.pay(snapToken, {
                     onSuccess: (result: any) => {
                         console.log('Payment success:', result);
+                        clearCart();
                         router.push(`/tracking/${orderId}`);
                     },
                     onPending: (result: any) => {
                         console.log('Payment pending:', result);
+                        clearCart();
                         router.push(`/tracking/${orderId}`);
                     },
                     onError: (result: any) => {
@@ -77,15 +76,16 @@ export default function CheckoutForm() {
                         setIsLoading(false);
                     },
                     onClose: () => {
-                        console.log('Payment popup closed');
-                        // User closed without completing payment
-                        // Still redirect to tracking to allow retry
-                        router.push(`/tracking/${orderId}`);
+                        console.log('Payment popup closed by user');
+                        // User closed popup without completing payment
+                        // Stay on checkout, don't redirect
+                        setIsLoading(false);
                     }
                 });
             } else {
                 // Fallback if snap token not available
-                router.push(`/tracking/${orderId}`);
+                alert('Payment gateway not available. Please try again.');
+                setIsLoading(false);
             }
         } catch (error) {
             console.error(error);
