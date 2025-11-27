@@ -3,11 +3,13 @@ import { NextResponse } from 'next/server';
 
 export async function GET(
     req: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const { id } = await params;
+        
         const order = await prisma.order.findUnique({
-            where: { publicId: params.id },
+            where: { publicId: id },
             include: {
                 items: {
                     include: {

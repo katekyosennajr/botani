@@ -3,11 +3,13 @@ import { NextResponse } from 'next/server';
 
 export async function POST(
     req: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const { id } = await params;
+
         const order = await prisma.order.findUnique({
-            where: { publicId: params.id }
+            where: { publicId: id }
         });
 
         if (!order) {
@@ -16,14 +18,14 @@ export async function POST(
 
         // Update order payment status to PAID
         const updatedOrder = await prisma.order.update({
-            where: { publicId: params.id },
+            where: { publicId: id },
             data: {
                 paymentStatus: 'PAID',
                 status: 'PAID'
             }
         });
 
-        console.log(`[Payment] Order ${params.id} payment confirmed`);
+        console.log(`[Payment] Order ${id} payment confirmed`);
 
         return NextResponse.json(updatedOrder);
     } catch (error) {
