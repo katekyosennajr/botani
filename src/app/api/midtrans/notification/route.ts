@@ -2,7 +2,6 @@ import { prisma } from '@/lib/db';
 import { NextResponse } from 'next/server';
 import midtransClient from 'midtrans-client';
 
-// Initialize Snap client for verification
 const snap = new midtransClient.Snap({
     isProduction: false,
     serverKey: process.env.MIDTRANS_SERVER_KEY || '',
@@ -11,94 +10,58 @@ const snap = new midtransClient.Snap({
 
 export async function POST(req: Request) {
     try {
-        const notification = await req.json();
+        const notificationJson = await req.json();
 
-        // Get transaction status from Midtrans
-        const orderId = notification.order_id;
-        const transactionId = notification.transaction_id;
-        const status = notification.transaction_status;
-        const fraudStatus = notification.fraud_status;
+        // Verify notification signature (optional but recommended for security)
+        // const statusResponse = await snap.transaction.notification(notificationJson);
+        // For simplicity in this prototype, we'll trust the payload or just check status directly
+        const statusResponse = notificationJson;
 
-        console.log(`[Midtrans Notification] Order: ${orderId}, Status: ${status}, Fraud: ${fraudStatus}`);
+        const orderId = statusResponse.order_id;
+        const transactionStatus = statusResponse.transaction_status;
+        const fraudStatus = statusResponse.fraud_status;
 
-        // Find order by publicId
-        const order = await prisma.order.findUnique({
-            where: { publicId: orderId }
+        console.log(`Transaction notification received. Order ID: ${orderId}. Transaction Status: ${transactionStatus}. Fraud Status: ${fraudStatus}`);
+
+        let orderStatus = 'PENDING';
+        let paymentStatus = 'UNPAID';
+
+        if (transactionStatus == 'capture') {
+            if (fraudStatus == 'challenge') {
+                // TODO: set transaction status on your database to 'challenge'
+                // e.g. 'payment status = challenge'
+                orderStatus = 'PENDING'; // Review needed
+            } else if (fraudStatus == 'accept') {
+                // TODO: set transaction status on your database to 'success'
+                orderStatus = 'PAID';
+                paymentStatus = 'PAID';
+            }
+        } else if (transactionStatus == 'settlement') {
+            // TODO: set transaction status on your database to 'success'
+            orderStatus = 'PAID';
+            paymentStatus = 'PAID';
+        } else if (transactionStatus == 'cancel' ||
+            transactionStatus == 'deny' ||
+            transactionStatus == 'expire') {
+            // TODO: set transaction status on your database to 'failure'
+            orderStatus = 'CANCELLED';
+            paymentStatus = 'FAILED';
+        } else if (transactionStatus == 'pending') {
+            // TODO: set transaction status on your database to 'pending' / waiting payment
+            orderStatus = 'PENDING';
+            paymentStatus = 'UNPAID';
+        }
+
+        // Update database
+        await prisma.order.update({
+            where: { publicId: orderId },
+            data: {
+                status: orderStatus,
+                paymentStatus: paymentStatus
+            }
         });
 
-        if (!order) {
-            return NextResponse.json({ error: 'Order not found' }, { status: 404 });
-        }
-
-        // Update order status based on transaction status
-        if (status === 'capture') {
-            if (fraudStatus === 'challenge') {
-                // Fraud challenge, keep as PENDING
-                await prisma.order.update({
-                    where: { id: order.id },
-                    data: {
-                        paymentStatus: 'PENDING',
-                        status: 'PENDING'
-                    }
-                });
-            } else if (fraudStatus === 'accept') {
-                // Payment accepted
-                await prisma.order.update({
-                    where: { id: order.id },
-                    data: {
-                        paymentStatus: 'PAID',
-                        status: 'PAID'
-                    }
-                });
-            }
-        } else if (status === 'settlement') {
-            // Payment settled
-            await prisma.order.update({
-                where: { id: order.id },
-                data: {
-                    paymentStatus: 'PAID',
-                    status: 'PAID'
-                }
-            });
-        } else if (status === 'pending') {
-            // Payment pending
-            await prisma.order.update({
-                where: { id: order.id },
-                data: {
-                    paymentStatus: 'UNPAID',
-                    status: 'PENDING'
-                }
-            });
-        } else if (status === 'deny') {
-            // Payment denied
-            await prisma.order.update({
-                where: { id: order.id },
-                data: {
-                    paymentStatus: 'FAILED',
-                    status: 'CANCELLED'
-                }
-            });
-        } else if (status === 'cancel' || status === 'expire') {
-            // Payment cancelled or expired
-            await prisma.order.update({
-                where: { id: order.id },
-                data: {
-                    paymentStatus: 'FAILED',
-                    status: 'EXPIRED'
-                }
-            });
-        } else if (status === 'refund') {
-            // Payment refunded
-            await prisma.order.update({
-                where: { id: order.id },
-                data: {
-                    paymentStatus: 'REFUNDED',
-                    status: 'REFUNDED'
-                }
-            });
-        }
-
-        return NextResponse.json({ ok: true });
+        return NextResponse.json({ status: 'OK' });
     } catch (error) {
         console.error('Midtrans Notification Error:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

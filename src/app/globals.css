@@ -1220,7 +1220,8 @@ img {
   font-size: 0.9rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: 1.5rem;
+  /* Increased from var(--spacing-sm) */
   opacity: 0.9;
 }
 
@@ -1526,3 +1527,4 @@ img {
   .tracking-wide {
     letter-spacing: 0.025em;
   }
+}

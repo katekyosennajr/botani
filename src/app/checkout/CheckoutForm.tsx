@@ -91,7 +91,7 @@ export default function CheckoutForm() {
                 // Development mode: redirect to payment simulator instead of tracking
                 console.log('Using mock token for development');
                 clearCart();
-                router.push(`/payment/${orderId}`);
+                router.push(`/tracking/${orderId}`);
                 return;
             }
 
