@@ -29,6 +29,8 @@ model Order {
   status        String      @default("PENDING") // PENDING, PAID, PROCESSED, SHIPPED, COMPLETED
   paymentStatus String      @default("UNPAID") // UNPAID, PAID
   qrisString    String?     // Simulated QRIS data
+  snapToken     String?     // Midtrans Snap Token
+  snapRedirectUrl String?   // Midtrans Snap Redirect URL
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
   items         OrderItem[]

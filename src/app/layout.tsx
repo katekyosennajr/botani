@@ -20,14 +20,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${playfair.variable}`}>
+      <body className={inter.className}>
         <CartProvider>
           <Navbar />
-          <main className="min-h-screen">
+          <main style={{ minHeight: '100vh', paddingTop: '80px' }}>
             {children}
           </main>
           <Footer />
         </CartProvider>
+        {/* Midtrans Snap.js */}
+        <script
+          src="https://app.sandbox.midtrans.com/snap/snap.js"
+          data-client-key={process.env.MIDTRANS_CLIENT_KEY}
+        ></script>
       </body>
     </html>
   );

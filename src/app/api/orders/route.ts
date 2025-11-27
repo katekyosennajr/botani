@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/db';
 import { generateOrderId } from '@/lib/order-generator';
 import { NextResponse } from 'next/server';
+import { createTransaction } from '@/lib/midtrans';
 
 export async function POST(req: Request) {
     try {
@@ -14,9 +15,7 @@ export async function POST(req: Request) {
 
         const publicId = await generateOrderId();
 
-        // Simulate QRIS Data (In real app, call Payment Gateway)
-        const qrisString = `00020101021126570011ID.CO.QRIS.WWW011893600520000000000051440014ID.CO.QRIS.WWW0215ID10200200000000303UMI5204541153033605802ID5913BOTANI STORE6007JAKARTA61051234562070703A016304${Math.floor(Math.random() * 10000)}`;
-
+        // Create Order in DB first (PENDING)
         const order = await prisma.order.create({
             data: {
                 publicId,
@@ -26,7 +25,6 @@ export async function POST(req: Request) {
                 totalAmount,
                 status: 'PENDING',
                 paymentStatus: 'UNPAID',
-                qrisString,
                 items: {
                     create: items.map((item: any) => ({
                         productId: item.productId,
@@ -37,10 +35,42 @@ export async function POST(req: Request) {
             }
         });
 
-        // SIMULATION: Send WhatsApp Notification
-        console.log(`[WA-BOT] Sending message to ${customerPhone}: "Halo ${customerName}, pesanan Anda #${order.publicId} telah diterima. Silakan lakukan pembayaran via QRIS di link berikut: /tracking/${order.publicId}"`);
+        // Generate Midtrans Snap Token
+        let snapToken = '';
+        let snapRedirectUrl = '';
 
-        return NextResponse.json({ orderId: order.publicId });
+        try {
+            const transaction = await createTransaction({
+                orderId: publicId,
+                grossAmount: totalAmount,
+                customerName: customerName,
+                customerPhone: customerPhone
+            });
+            snapToken = transaction.token;
+            snapRedirectUrl = transaction.redirect_url;
+
+            // Update Order with Snap Token
+            await prisma.order.update({
+                where: { id: order.id },
+                data: {
+                    snapToken,
+                    snapRedirectUrl
+                }
+            });
+
+        } catch (midtransError) {
+            console.error('Midtrans Token Generation Failed:', midtransError);
+            // We still return the orderId, but maybe with a warning or handle it gracefully.
+            // For now, let's log it. The user might need to retry payment later.
+        }
+
+        // SIMULATION: Send WhatsApp Notification
+        console.log(`[WA-BOT] Sending message to ${customerPhone}: "Halo ${customerName}, pesanan Anda #${order.publicId} telah diterima. Silakan lakukan pembayaran."`);
+
+        return NextResponse.json({
+            orderId: order.publicId,
+            snapToken
+        });
     } catch (error) {
         console.error('Order creation failed:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

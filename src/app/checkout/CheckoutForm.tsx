@@ -5,6 +5,23 @@ import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 
+declare global {
+    interface Window {
+        snap: {
+            pay: (token: string, callbacks?: SnapCallback) => void;
+            embed: (token: string, options?: any) => void;
+            redirectUrl: (url: string) => void;
+        };
+    }
+}
+
+interface SnapCallback {
+    onSuccess?: (result: any) => void;
+    onPending?: (result: any) => void;
+    onError?: (result: any) => void;
+    onClose?: () => void;
+}
+
 export default function CheckoutForm() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
@@ -30,9 +47,6 @@ export default function CheckoutForm() {
         };
 
         try {
-            // Note: We might need to update the API route to handle multiple items structure
-            // For now, we'll send the data structure. If the backend is strict, we might need to adjust.
-            // Assuming /api/orders can handle this or we'll mock it for now.
             const res = await fetch('/api/orders', {
                 method: 'POST',
                 body: JSON.stringify(data),
@@ -41,16 +55,41 @@ export default function CheckoutForm() {
 
             if (!res.ok) throw new Error('Failed to create order');
 
-            const { orderId } = await res.json();
+            const { orderId, snapToken } = await res.json();
 
             // Clear cart after successful order
             clearCart();
 
-            router.push(`/tracking/${orderId}`);
+            // Show Midtrans Snap payment popup
+            if (snapToken && window.snap) {
+                window.snap.pay(snapToken, {
+                    onSuccess: (result: any) => {
+                        console.log('Payment success:', result);
+                        router.push(`/tracking/${orderId}`);
+                    },
+                    onPending: (result: any) => {
+                        console.log('Payment pending:', result);
+                        router.push(`/tracking/${orderId}`);
+                    },
+                    onError: (result: any) => {
+                        console.error('Payment error:', result);
+                        alert('Payment failed. Please try again.');
+                        setIsLoading(false);
+                    },
+                    onClose: () => {
+                        console.log('Payment popup closed');
+                        // User closed without completing payment
+                        // Still redirect to tracking to allow retry
+                        router.push(`/tracking/${orderId}`);
+                    }
+                });
+            } else {
+                // Fallback if snap token not available
+                router.push(`/tracking/${orderId}`);
+            }
         } catch (error) {
             console.error(error);
             alert('Something went wrong. Please try again.');
-        } finally {
             setIsLoading(false);
         }
     }
