@@ -5,7 +5,7 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const query = searchParams.get('q');
 
-    if (!query || query.length < 2) {
+    if (!query || query.length < 1) {
         return NextResponse.json([]);
     }
 
@@ -13,14 +13,17 @@ export async function GET(req: Request) {
         const products = await prisma.product.findMany({
             where: {
                 name: {
-                    contains: query
+                    contains: query,
+                    mode: 'insensitive'
                 }
             },
             select: {
                 id: true,
                 name: true,
                 slug: true,
-                category: true
+                category: true,
+                price: true,
+                image: true
             },
             take: 5
         });

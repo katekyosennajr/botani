@@ -265,24 +265,26 @@ export default function Navbar() {
                         onClick={(e) => e.stopPropagation()}
                         style={{ maxWidth: '500px', marginTop: '60px' }}
                     >
-                    <div className="search-modal-header" style={{ padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem', borderBottom: '1px solid #f3f4f6' }}>
-                            <Search size={16} className="text-muted" style={{ flexShrink: 0 }} />
-                            <form onSubmit={handleSearchSubmit} className="flex-1">
-                                <input
-                                    ref={searchInputRef}
-                                    type="text"
-                                    placeholder="Find your perfect plant..."
-                                    className="search-modal-input"
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    autoComplete="off"
-                                    style={{ width: '100%', outline: 'none', border: 'none', fontSize: '1rem' }}
-                                />
-                            </form>
+                    <div className="search-modal-header" style={{ padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', borderBottom: '1px solid #f3f4f6' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: 1 }}>
+                                <Search size={16} className="text-muted" style={{ flexShrink: 0 }} />
+                                <form onSubmit={handleSearchSubmit} className="flex-1">
+                                    <input
+                                        ref={searchInputRef}
+                                        type="text"
+                                        placeholder="Find your perfect plant..."
+                                        className="search-modal-input"
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        autoComplete="off"
+                                        style={{ width: '100%', outline: 'none', border: 'none', fontSize: '1rem' }}
+                                    />
+                                </form>
+                            </div>
                             <button 
                                 onClick={handleCloseSearch}
                                 className="text-muted hover:text-primary"
-                                style={{ padding: '0.25rem', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                style={{ padding: '0.25rem', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: '1rem' }}
                             >
                                 <X size={16} />
                             </button>
