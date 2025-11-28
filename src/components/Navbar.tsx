@@ -128,7 +128,7 @@ export default function Navbar() {
                         <Link href="/cart" className="nav-icon-btn relative">
                             <ShoppingBag size={20} />
                             {totalItems > 0 && (
-                                <span className="absolute -top-1 -right-1 bg-primary text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">
                                     {totalItems}
                                 </span>
                             )}
@@ -143,7 +143,7 @@ export default function Navbar() {
                             >
                                 <Menu size={20} />
                             </button>
-                            
+
                             {isDropdownOpen && (
                                 <div style={{
                                     position: 'absolute',
@@ -156,8 +156,8 @@ export default function Navbar() {
                                     border: '1px solid #e5e7eb',
                                     overflow: 'hidden'
                                 }}>
-                                    <Link 
-                                        href="/shop" 
+                                    <Link
+                                        href="/shop"
                                         style={{
                                             display: 'block',
                                             padding: '0.75rem 1.25rem',
@@ -177,8 +177,8 @@ export default function Navbar() {
                                     >
                                         Shop
                                     </Link>
-                                    <Link 
-                                        href="/catalog?category=Retail" 
+                                    <Link
+                                        href="/catalog?category=Retail"
                                         style={{
                                             display: 'block',
                                             padding: '0.75rem 1.25rem',
@@ -198,8 +198,8 @@ export default function Navbar() {
                                     >
                                         Retail
                                     </Link>
-                                    <Link 
-                                        href="/catalog?category=Wholesale" 
+                                    <Link
+                                        href="/catalog?category=Wholesale"
                                         style={{
                                             display: 'block',
                                             padding: '0.75rem 1.25rem',
@@ -219,8 +219,8 @@ export default function Navbar() {
                                     >
                                         Wholesale
                                     </Link>
-                                    <Link 
-                                        href="/about" 
+                                    <Link
+                                        href="/about"
                                         style={{
                                             display: 'block',
                                             padding: '0.75rem 1.25rem',
@@ -260,16 +260,16 @@ export default function Navbar() {
 
             {/* Search Modal - Elegant Design */}
             {isSearchOpen && (
-                <div 
-                    className="search-modal-overlay" 
+                <div
+                    className="search-modal-overlay"
                     onClick={() => setIsSearchOpen(false)}
                 >
-                    <div 
-                        className="search-modal-content" 
+                    <div
+                        className="search-modal-content"
                         onClick={(e) => e.stopPropagation()}
                         style={{ maxWidth: '500px', marginTop: '60px' }}
                     >
-                    <div className="search-modal-header" style={{ padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', borderBottom: '1px solid #f3f4f6' }}>
+                        <div className="search-modal-header" style={{ padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', borderBottom: '1px solid #f3f4f6' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: 1 }}>
                                 <Search size={16} className="text-muted" style={{ flexShrink: 0 }} />
                                 <form onSubmit={handleSearchSubmit} className="flex-1">
@@ -285,7 +285,7 @@ export default function Navbar() {
                                     />
                                 </form>
                             </div>
-                            <button 
+                            <button
                                 onClick={handleCloseSearch}
                                 className="text-muted hover:text-primary"
                                 style={{ padding: '0.25rem', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: '1rem' }}

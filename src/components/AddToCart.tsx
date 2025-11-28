@@ -22,15 +22,13 @@ export default function AddToCart({ product }: AddToCartProps) {
     const router = useRouter();
 
     const handleAddToCart = () => {
-        for (let i = 0; i < quantity; i++) {
-            addItem({
-                id: product.id,
-                name: product.name,
-                price: product.price,
-                image: product.image,
-                slug: product.slug,
-            });
-        }
+        addItem({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: product.image,
+            slug: product.slug,
+        }, quantity);
 
         setIsAdded(true);
         setTimeout(() => setIsAdded(false), 2000);

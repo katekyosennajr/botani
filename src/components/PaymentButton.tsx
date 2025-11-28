@@ -26,7 +26,39 @@ export default function PaymentButton({ snapToken, orderId }: PaymentButtonProps
         return () => clearInterval(checkSnap);
     }, []);
 
-    const handlePayment = () => {
+    const handlePayment = async () => {
+        // Handle Mock Token (Development Mode)
+        if (snapToken.startsWith('mock_')) {
+            const confirmSimulate = window.confirm(
+                'Development Mode: This is a mock token. Click OK to simulate a successful payment.'
+            );
+
+            if (confirmSimulate) {
+                setIsLoading(true);
+                try {
+                    const res = await fetch('/api/test/simulate-payment', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ orderId }),
+                    });
+
+                    if (res.ok) {
+                        alert('Payment simulated successfully!');
+                        router.refresh();
+                    } else {
+                        alert('Failed to simulate payment.');
+                    }
+                } catch (error) {
+                    console.error(error);
+                    alert('Error simulating payment.');
+                } finally {
+                    setIsLoading(false);
+                }
+            }
+            return;
+        }
+
+        // Real Midtrans Snap
         if (!snapReady) {
             alert('Payment gateway is loading. Please try again.');
             return;
@@ -58,7 +90,7 @@ export default function PaymentButton({ snapToken, orderId }: PaymentButtonProps
     return (
         <button
             onClick={handlePayment}
-            disabled={isLoading || !snapReady}
+            disabled={isLoading || (!snapReady && !snapToken.startsWith('mock_'))}
             className="btn btn-primary w-full mt-4 flex items-center justify-center gap-2"
         >
             {isLoading ? (
@@ -66,7 +98,7 @@ export default function PaymentButton({ snapToken, orderId }: PaymentButtonProps
             ) : (
                 <CreditCard size={20} />
             )}
-            {isLoading ? 'Processing...' : 'Pay Now'}
+            {isLoading ? 'Processing...' : snapToken.startsWith('mock_') ? 'Simulate Payment (Dev)' : 'Pay Now'}
         </button>
     );
 }
