@@ -53,10 +53,10 @@ export default function Navbar() {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    // Debounce search
+    // Debounce search - start from 1 character
     useEffect(() => {
         const timer = setTimeout(async () => {
-            if (searchQuery.length > 2) {
+            if (searchQuery.length > 0) {
                 setIsSearching(true);
                 try {
                     const res = await fetch(`/api/products/search?q=${encodeURIComponent(searchQuery)}`);
@@ -72,7 +72,7 @@ export default function Navbar() {
             } else {
                 setSuggestions([]);
             }
-        }, 300);
+        }, 200);
 
         return () => clearTimeout(timer);
     }, [searchQuery]);
@@ -119,7 +119,7 @@ export default function Navbar() {
                             )}
                         </Link>
 
-                        {/* Dropdown Menu */}
+                        {/* Dropdown Menu - Only one */}
                         <div className="relative" ref={dropdownRef}>
                             <button
                                 className="nav-icon-btn"
@@ -130,31 +130,31 @@ export default function Navbar() {
                             </button>
                             
                             {isDropdownOpen && (
-                                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50 border border-gray-100">
+                                <div className="absolute right-0 mt-2 bg-white rounded-lg shadow-lg py-1 z-50 border border-gray-100 min-w-max">
                                     <Link 
                                         href="/catalog" 
-                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
+                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors whitespace-nowrap"
                                         onClick={handleDropdownItemClick}
                                     >
                                         Shop
                                     </Link>
                                     <Link 
                                         href="/catalog?category=Retail" 
-                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
+                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors whitespace-nowrap"
                                         onClick={handleDropdownItemClick}
                                     >
                                         Retail
                                     </Link>
                                     <Link 
                                         href="/catalog?category=Wholesale" 
-                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
+                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors whitespace-nowrap"
                                         onClick={handleDropdownItemClick}
                                     >
                                         Wholesale
                                     </Link>
                                     <Link 
                                         href="/about" 
-                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
+                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors whitespace-nowrap"
                                         onClick={handleDropdownItemClick}
                                     >
                                         Our Story
@@ -162,13 +162,6 @@ export default function Navbar() {
                                 </div>
                             )}
                         </div>
-
-                        <button
-                            className="nav-icon-btn md:hidden"
-                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        >
-                            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-                        </button>
                     </div>
                 </div>
 
@@ -184,60 +177,88 @@ export default function Navbar() {
                 )}
             </nav>
 
-            {/* Search Modal */}
+            {/* Search Modal - Elegant Design */}
             {isSearchOpen && (
-                <div className="search-modal-overlay" onClick={() => setIsSearchOpen(false)}>
-                    <div className="search-modal-content" onClick={(e) => e.stopPropagation()}>
-                        <div className="search-modal-header">
-                            <Search size={20} className="text-muted" />
-                            <form onSubmit={handleSearchSubmit} className="flex-1">
+                <div 
+                    className="search-modal-overlay" 
+                    onClick={() => setIsSearchOpen(false)}
+                >
+                    <div 
+                        className="search-modal-content" 
+                        onClick={(e) => e.stopPropagation()}
+                        style={{ maxWidth: '500px', marginTop: '60px' }}
+                    >
+                        <div className="search-modal-header" style={{ padding: '1.25rem' }}>
+                            <Search size={18} className="text-muted" />
+                            <form onSubmit={handleSearchSubmit} className="flex-1 ml-3">
                                 <input
                                     ref={searchInputRef}
                                     type="text"
-                                    placeholder="Search plants..."
+                                    placeholder="Find your perfect plant..."
                                     className="search-modal-input"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
+                                    autoComplete="off"
                                 />
                             </form>
-                            <button onClick={() => setIsSearchOpen(false)} className="text-muted hover:text-primary">
-                                <X size={20} />
+                            <button 
+                                onClick={() => setIsSearchOpen(false)} 
+                                className="text-muted hover:text-primary"
+                                style={{ padding: '0.25rem' }}
+                            >
+                                <X size={18} />
                             </button>
                         </div>
 
-                        {/* Suggestions */}
-                        {(suggestions.length > 0 || isSearching) && (
-                            <div className="search-suggestions-list">
-                                {isSearching ? (
-                                    <div className="text-center py-4 text-muted">Searching...</div>
-                                ) : suggestions.length > 0 ? (
-                                    suggestions.map((product) => (
-                                        <Link
-                                            key={product.id}
-                                            href={`/product/${product.slug}`}
-                                            onClick={() => setIsSearchOpen(false)}
-                                            className="search-suggestion-item"
-                                        >
-                                            <div className="suggestion-content">
-                                                <img
-                                                    src={product.image}
-                                                    alt={product.name}
-                                                    className="w-10 h-10 object-cover rounded-md"
-                                                />
-                                                <div>
-                                                    <p className="suggestion-name">{product.name}</p>
-                                                    <p className="text-xs text-muted">
-                                                        {new Intl.NumberFormat('id-ID', {
-                                                            style: 'currency',
-                                                            currency: 'IDR'
-                                                        }).format(product.price)}
-                                                    </p>
-                                                </div>
+                        {/* Suggestions List */}
+                        {suggestions.length > 0 && (
+                            <div className="search-suggestions-list" style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                                {suggestions.map((product) => (
+                                    <Link
+                                        key={product.id}
+                                        href={`/product/${product.slug}`}
+                                        onClick={() => setIsSearchOpen(false)}
+                                        className="search-suggestion-item"
+                                    >
+                                        <div className="suggestion-content">
+                                            <img
+                                                src={product.image}
+                                                alt={product.name}
+                                                className="w-12 h-12 object-cover rounded-md"
+                                            />
+                                            <div>
+                                                <p className="suggestion-name">{product.name}</p>
+                                                <p className="text-xs text-muted">
+                                                    {product.category} • {new Intl.NumberFormat('id-ID', {
+                                                        style: 'currency',
+                                                        currency: 'IDR'
+                                                    }).format(product.price)}
+                                                </p>
                                             </div>
-                                            <span className="suggestion-category">{product.category}</span>
-                                        </Link>
-                                    ))
-                                ) : null}
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        )}
+
+                        {/* Loading State */}
+                        {isSearching && (
+                            <div style={{ padding: '1.5rem', textAlign: 'center', color: '#9ca3af', fontSize: '0.9rem' }}>
+                                Searching...
+                            </div>
+                        )}
+
+                        {/* No Results */}
+                        {searchQuery.length > 0 && !isSearching && suggestions.length === 0 && (
+                            <div style={{ padding: '1.5rem', textAlign: 'center', color: '#9ca3af', fontSize: '0.9rem' }}>
+                                No plants found matching "{searchQuery}"
+                            </div>
+                        )}
+
+                        {/* Help Text */}
+                        {searchQuery.length === 0 && (
+                            <div style={{ padding: '1rem 1.25rem', fontSize: '0.85rem', color: '#d1d5db', backgroundColor: '#f9fafb', borderTop: '1px solid #f3f4f6' }}>
+                                Type to search by plant name
                             </div>
                         )}
                     </div>
