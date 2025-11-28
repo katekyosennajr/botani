@@ -81,8 +81,19 @@ export default function Navbar() {
         e.preventDefault();
         if (searchQuery.trim()) {
             setIsSearchOpen(false);
+            setSearchQuery('');
             router.push(`/catalog?search=${encodeURIComponent(searchQuery)}`);
         }
+    };
+
+    const handleCloseSearch = () => {
+        setIsSearchOpen(false);
+        setSearchQuery('');
+    };
+
+    const handleSuggestionClick = () => {
+        setIsSearchOpen(false);
+        setSearchQuery('');
     };
 
     const handleDropdownItemClick = () => {
@@ -254,8 +265,8 @@ export default function Navbar() {
                         onClick={(e) => e.stopPropagation()}
                         style={{ maxWidth: '500px', marginTop: '60px' }}
                     >
-                    <div className="search-modal-header" style={{ padding: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid #f3f4f6' }}>
-                            <Search size={18} className="text-muted" style={{ flexShrink: 0 }} />
+                    <div className="search-modal-header" style={{ padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem', borderBottom: '1px solid #f3f4f6' }}>
+                            <Search size={16} className="text-muted" style={{ flexShrink: 0 }} />
                             <form onSubmit={handleSearchSubmit} className="flex-1">
                                 <input
                                     ref={searchInputRef}
@@ -269,11 +280,11 @@ export default function Navbar() {
                                 />
                             </form>
                             <button 
-                                onClick={() => setIsSearchOpen(false)} 
+                                onClick={handleCloseSearch}
                                 className="text-muted hover:text-primary"
-                                style={{ padding: '0.5rem', flexShrink: 0 }}
+                                style={{ padding: '0.25rem', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                             >
-                                <X size={20} />
+                                <X size={16} />
                             </button>
                         </div>
 
@@ -284,24 +295,45 @@ export default function Navbar() {
                                     <Link
                                         key={product.id}
                                         href={`/product/${product.slug}`}
-                                        onClick={() => setIsSearchOpen(false)}
-                                        className="search-suggestion-item"
+                                        onClick={handleSuggestionClick}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '1rem',
+                                            padding: '1rem',
+                                            borderBottom: '1px solid #f3f4f6',
+                                            textDecoration: 'none',
+                                            color: 'inherit',
+                                            transition: 'background-color 0.2s'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.backgroundColor = '#f9fafb';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.backgroundColor = 'transparent';
+                                        }}
                                     >
-                                        <div className="suggestion-content">
-                                            <img
-                                                src={product.image}
-                                                alt={product.name}
-                                                className="w-12 h-12 object-cover rounded-md"
-                                            />
-                                            <div>
-                                                <p className="suggestion-name">{product.name}</p>
-                                                <p className="text-xs text-muted">
-                                                    {product.category} • {new Intl.NumberFormat('id-ID', {
-                                                        style: 'currency',
-                                                        currency: 'IDR'
-                                                    }).format(product.price)}
-                                                </p>
-                                            </div>
+                                        <img
+                                            src={product.image}
+                                            alt={product.name}
+                                            style={{
+                                                width: '56px',
+                                                height: '56px',
+                                                objectFit: 'cover',
+                                                borderRadius: '0.375rem',
+                                                flexShrink: 0
+                                            }}
+                                        />
+                                        <div style={{ flex: 1 }}>
+                                            <p style={{ fontSize: '1rem', fontWeight: '500', marginBottom: '0.25rem', color: '#1f2937' }}>
+                                                {product.name}
+                                            </p>
+                                            <p style={{ fontSize: '0.875rem', color: '#6b7280' }}>
+                                                {product.category} • {new Intl.NumberFormat('id-ID', {
+                                                    style: 'currency',
+                                                    currency: 'IDR'
+                                                }).format(product.price)}
+                                            </p>
                                         </div>
                                     </Link>
                                 ))}
