@@ -57,7 +57,15 @@ export default async function CatalogPage({
                     ) : (
                         <div className="product-grid">
                             {products.map((product) => (
-                                <ProductCard key={product.id} product={product} />
+                                <ProductCard
+                                    key={product.id}
+                                    id={product.id}
+                                    name={product.name}
+                                    price={product.price}
+                                    image={product.image}
+                                    category={product.category}
+                                    slug={product.slug}
+                                />
                             ))}
                         </div>
                     )}
@@ -93,20 +101,6 @@ export default async function CatalogPage({
                 ) : (
                     <div className="product-grid">
                         {allProducts.map((product) => (
-                            <ProductCard key={product.id} product={product} />
-                        ))}
-                    </div>
-                )}
-            </div>
-        </div>
-    );
-}                {products.length === 0 ? (
-                    <div className="empty-state">
-                        <p>No products found in this category.</p>
-                    </div>
-                ) : (
-                    <div className="product-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}>
-                        {products.map((product) => (
                             <ProductCard
                                 key={product.id}
                                 id={product.id}

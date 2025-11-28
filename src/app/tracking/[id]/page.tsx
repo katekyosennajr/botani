@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/db';
 import { notFound } from 'next/navigation';
 import { CheckCircle, Clock, Package, Truck } from 'lucide-react';
+import PaymentButton from '@/components/PaymentButton';
 
 // Mock Timeline based on status
 const getTimeline = (status: string) => {
@@ -107,6 +108,9 @@ export default async function OrderStatusPage({
                                         <p className="text-muted" style={{ fontSize: '0.9rem' }}>
                                             Please complete your payment via the popup window.
                                         </p>
+                                        {order.snapToken && (
+                                            <PaymentButton snapToken={order.snapToken} orderId={order.publicId} />
+                                        )}
                                     </div>
                                 )}
                             </div>
