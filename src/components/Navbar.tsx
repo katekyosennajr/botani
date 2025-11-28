@@ -130,31 +130,97 @@ export default function Navbar() {
                             </button>
                             
                             {isDropdownOpen && (
-                                <div className="absolute right-0 mt-2 bg-white rounded-lg shadow-lg py-1 z-50 border border-gray-100 min-w-max">
+                                <div style={{
+                                    position: 'absolute',
+                                    right: 0,
+                                    marginTop: '0.5rem',
+                                    backgroundColor: 'white',
+                                    borderRadius: '0.5rem',
+                                    boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                                    zIndex: 50,
+                                    border: '1px solid #e5e7eb',
+                                    overflow: 'hidden'
+                                }}>
                                     <Link 
                                         href="/catalog" 
-                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors whitespace-nowrap"
+                                        style={{
+                                            display: 'block',
+                                            padding: '0.75rem 1.25rem',
+                                            fontSize: '0.95rem',
+                                            color: '#374151',
+                                            textDecoration: 'none'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.backgroundColor = '#f3f4f6';
+                                            e.currentTarget.style.color = '#2d4a3e';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.backgroundColor = 'white';
+                                            e.currentTarget.style.color = '#374151';
+                                        }}
                                         onClick={handleDropdownItemClick}
                                     >
                                         Shop
                                     </Link>
                                     <Link 
                                         href="/catalog?category=Retail" 
-                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors whitespace-nowrap"
+                                        style={{
+                                            display: 'block',
+                                            padding: '0.75rem 1.25rem',
+                                            fontSize: '0.95rem',
+                                            color: '#374151',
+                                            textDecoration: 'none'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.backgroundColor = '#f3f4f6';
+                                            e.currentTarget.style.color = '#2d4a3e';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.backgroundColor = 'white';
+                                            e.currentTarget.style.color = '#374151';
+                                        }}
                                         onClick={handleDropdownItemClick}
                                     >
                                         Retail
                                     </Link>
                                     <Link 
                                         href="/catalog?category=Wholesale" 
-                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors whitespace-nowrap"
+                                        style={{
+                                            display: 'block',
+                                            padding: '0.75rem 1.25rem',
+                                            fontSize: '0.95rem',
+                                            color: '#374151',
+                                            textDecoration: 'none'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.backgroundColor = '#f3f4f6';
+                                            e.currentTarget.style.color = '#2d4a3e';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.backgroundColor = 'white';
+                                            e.currentTarget.style.color = '#374151';
+                                        }}
                                         onClick={handleDropdownItemClick}
                                     >
                                         Wholesale
                                     </Link>
                                     <Link 
                                         href="/about" 
-                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors whitespace-nowrap"
+                                        style={{
+                                            display: 'block',
+                                            padding: '0.75rem 1.25rem',
+                                            fontSize: '0.95rem',
+                                            color: '#374151',
+                                            textDecoration: 'none'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.backgroundColor = '#f3f4f6';
+                                            e.currentTarget.style.color = '#2d4a3e';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.backgroundColor = 'white';
+                                            e.currentTarget.style.color = '#374151';
+                                        }}
                                         onClick={handleDropdownItemClick}
                                     >
                                         Our Story
@@ -188,9 +254,9 @@ export default function Navbar() {
                         onClick={(e) => e.stopPropagation()}
                         style={{ maxWidth: '500px', marginTop: '60px' }}
                     >
-                        <div className="search-modal-header" style={{ padding: '1.25rem' }}>
-                            <Search size={18} className="text-muted" />
-                            <form onSubmit={handleSearchSubmit} className="flex-1 ml-3">
+                    <div className="search-modal-header" style={{ padding: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid #f3f4f6' }}>
+                            <Search size={18} className="text-muted" style={{ flexShrink: 0 }} />
+                            <form onSubmit={handleSearchSubmit} className="flex-1">
                                 <input
                                     ref={searchInputRef}
                                     type="text"
@@ -199,14 +265,15 @@ export default function Navbar() {
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     autoComplete="off"
+                                    style={{ width: '100%', outline: 'none', border: 'none', fontSize: '1rem' }}
                                 />
                             </form>
                             <button 
                                 onClick={() => setIsSearchOpen(false)} 
                                 className="text-muted hover:text-primary"
-                                style={{ padding: '0.25rem' }}
+                                style={{ padding: '0.5rem', flexShrink: 0 }}
                             >
-                                <X size={18} />
+                                <X size={20} />
                             </button>
                         </div>
 
