@@ -60,11 +60,15 @@ export default function Navbar() {
                 setIsSearching(true);
                 try {
                     const res = await fetch(`/api/products/search?q=${encodeURIComponent(searchQuery)}`);
-                    if (!res.ok) throw new Error('Search failed');
+                    if (!res.ok) {
+                        console.error('Search failed:', res.status);
+                        setSuggestions([]);
+                        return;
+                    }
                     const data = await res.json();
-                    setSuggestions(data);
+                    setSuggestions(Array.isArray(data) ? data : []);
                 } catch (error) {
-                    console.error('Search failed:', error);
+                    console.error('Search error:', error);
                     setSuggestions([]);
                 } finally {
                     setIsSearching(false);
@@ -153,7 +157,7 @@ export default function Navbar() {
                                     overflow: 'hidden'
                                 }}>
                                     <Link 
-                                        href="/catalog" 
+                                        href="/shop" 
                                         style={{
                                             display: 'block',
                                             padding: '0.75rem 1.25rem',
@@ -245,7 +249,7 @@ export default function Navbar() {
                 {/* Mobile Menu */}
                 {isMobileMenuOpen && (
                     <div className="mobile-menu md:hidden">
-                        <Link href="/catalog" className="mobile-nav-link">Shop</Link>
+                        <Link href="/shop" className="mobile-nav-link">Shop</Link>
                         <Link href="/catalog?category=Retail" className="mobile-nav-link">Retail</Link>
                         <Link href="/catalog?category=Wholesale" className="mobile-nav-link">Wholesale</Link>
                         <Link href="/about" className="mobile-nav-link">Our Story</Link>

@@ -5,14 +5,70 @@ import Link from 'next/link';
 export default async function CatalogPage({
     searchParams,
 }: {
-    searchParams: Promise<{ type?: string; search?: string }>;
+    searchParams: Promise<{ category?: string; search?: string }>;
 }) {
-    const { type, search } = await searchParams;
-    const categoryFilter = type === 'wholesale' ? 'Wholesale' : 'Retail';
+    const { category, search } = await searchParams;
 
-    const products = await prisma.product.findMany({
+    // If category is specified (from dropdown), show filtered view
+    if (category) {
+        const products = await prisma.product.findMany({
+            where: {
+                category: category,
+                name: search ? { contains: search } : undefined
+            },
+            orderBy: { createdAt: 'desc' }
+        });
+
+        return (
+            <div className="page-container">
+                <div className="container">
+                    <div className="page-header">
+                        <div>
+                            <h1 className="page-title">
+                                {category === 'Wholesale' ? 'Wholesale Collection' : 'Retail Collection'}
+                            </h1>
+                            <p className="text-muted" style={{ maxWidth: '600px' }}>
+                                {category === 'Wholesale'
+                                    ? 'Bulk options for nurseries, landscapers, and resellers. Minimum order quantities apply.'
+                                    : 'Hand-picked specimens for your personal collection. Nurtured with care.'}
+                            </p>
+                        </div>
+
+                        <div className="filter-bar">
+                            <Link
+                                href="/catalog?category=Retail"
+                                className={`filter-btn ${category === 'Retail' ? 'active' : ''}`}
+                            >
+                                Retail
+                            </Link>
+                            <Link
+                                href="/catalog?category=Wholesale"
+                                className={`filter-btn ${category === 'Wholesale' ? 'active' : ''}`}
+                            >
+                                Wholesale
+                            </Link>
+                        </div>
+                    </div>
+
+                    {products.length === 0 ? (
+                        <div className="empty-state">
+                            <p>No plants found matching your criteria.</p>
+                        </div>
+                    ) : (
+                        <div className="product-grid">
+                            {products.map((product) => (
+                                <ProductCard key={product.id} product={product} />
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </div>
+        );
+    }
+
+    // Default: Show all products (Shop view)
+    const allProducts = await prisma.product.findMany({
         where: {
-            category: type ? categoryFilter : undefined,
             name: search ? { contains: search } : undefined
         },
         orderBy: { createdAt: 'desc' }
@@ -23,33 +79,28 @@ export default async function CatalogPage({
             <div className="container">
                 <div className="page-header">
                     <div>
-                        <h1 className="page-title">
-                            {type === 'wholesale' ? 'Wholesale Collection' : 'Retail Collection'}
-                        </h1>
+                        <h1 className="page-title">Our Shop</h1>
                         <p className="text-muted" style={{ maxWidth: '600px' }}>
-                            {type === 'wholesale'
-                                ? 'Bulk options for nurseries, landscapers, and resellers. Minimum order quantities apply.'
-                                : 'Hand-picked specimens for your personal collection. Nurtured with care.'}
+                            Explore our complete collection of premium ornamental plants. Available for both retail and wholesale.
                         </p>
-                    </div>
-
-                    <div className="filter-bar">
-                        <Link
-                            href="/catalog"
-                            className={`filter-btn ${!type ? 'active' : ''}`}
-                        >
-                            Retail
-                        </Link>
-                        <Link
-                            href="/catalog?type=wholesale"
-                            className={`filter-btn ${type === 'wholesale' ? 'active' : ''}`}
-                        >
-                            Wholesale
-                        </Link>
                     </div>
                 </div>
 
-                {products.length === 0 ? (
+                {allProducts.length === 0 ? (
+                    <div className="empty-state">
+                        <p>No plants found matching your criteria.</p>
+                    </div>
+                ) : (
+                    <div className="product-grid">
+                        {allProducts.map((product) => (
+                            <ProductCard key={product.id} product={product} />
+                        ))}
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+}                {products.length === 0 ? (
                     <div className="empty-state">
                         <p>No products found in this category.</p>
                     </div>

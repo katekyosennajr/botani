@@ -26,7 +26,7 @@ export default function RootLayout({
         <AuthProvider>
           <CartProvider>
             <Navbar />
-            <main style={{ minHeight: '100vh', paddingTop: '74px' }}>
+            <main style={{ minHeight: '100vh', paddingTop: '64px' }}>
               {children}
             </main>
             <Footer />
