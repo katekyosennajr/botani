@@ -1,141 +1,100 @@
 import React from 'react';
-import { Leaf, Award, Globe, Users } from 'lucide-react';
+import Image from 'next/image';
 
 export default function AboutPage() {
     return (
-        <div className="bg-background min-h-screen">
-            {/* Hero Section - Parallax-like effect */}
-            <div className="relative h-[80vh] flex items-center justify-center overflow-hidden">
-                <div className="absolute inset-0 z-0">
-                    <img
-                        src="https://images.unsplash.com/photo-1466781783310-a2ac7d6f6028?auto=format&fit=crop&q=80&w=2000"
-                        alt="Botani Greenhouse"
-                        className="w-full h-full object-cover opacity-90"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-background" />
-                </div>
+        <div className="bg-white min-h-screen text-gray-800">
+            {/* Main Container with extra top/bottom spacing */}
+            <div className="container mx-auto px-6 max-w-5xl" style={{ paddingTop: '120px', paddingBottom: '120px' }}>
 
-                <div className="relative z-10 text-center px-4 max-w-5xl mx-auto animate-fade-in-up">
-                    <span className="inline-block py-1 px-3 border border-white/30 rounded-full text-white/80 text-xs font-medium tracking-[0.2em] uppercase mb-6 backdrop-blur-sm">
-                        Est. 2023 • West Java, Indonesia
-                    </span>
-                    <h1 className="text-6xl md:text-8xl font-heading font-bold text-white mb-8 tracking-tight leading-tight">
-                        Cultivating <br />
-                        <span className="italic font-light text-accent">Living Art</span>
-                    </h1>
-                    <p className="text-xl md:text-2xl text-white/90 font-light max-w-2xl mx-auto leading-relaxed">
-                        We bridge the gap between the lush rainforests of Indonesia and the curated spaces of collectors worldwide.
+                {/* Header - Added extra margin bottom */}
+                <div className="text-center" style={{ marginBottom: '100px' }}>
+                    <span className="text-primary font-medium tracking-widest uppercase text-sm mb-6 block">Est. 2023</span>
+                    <h1 className="text-5xl md:text-6xl font-heading font-bold text-primary mb-10">Our Story</h1>
+                    <p className="text-xl text-gray-500 max-w-3xl mx-auto leading-relaxed font-light">
+                        Cultivating a connection between nature and your home through exceptional botanical curation.
                     </p>
                 </div>
+
+                {/* Section 1: The Beginning */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-24 items-center" style={{ marginBottom: '120px' }}>
+                    <div className="order-2 md:order-1">
+                        <h2 className="text-3xl font-heading font-semibold text-primary mb-8">From the Highlands</h2>
+                        <div className="w-16 h-1 bg-primary/20 mb-10"></div>
+                        <p className="text-lg text-gray-600 leading-relaxed mb-8">
+                            Botani started in 2023 in the cool, misty highlands of West Java. Surrounded by the rich biodiversity of the Indonesian archipelago, we discovered a passion for rare aroids and tropical plants that are as unique as they are beautiful.
+                        </p>
+                        <p className="text-lg text-gray-600 leading-relaxed">
+                            What began as a small collection has grown into a dedicated nursery, where we combine traditional farming wisdom with modern horticultural science to produce plants of outstanding health and vigor.
+                        </p>
+                    </div>
+                    <div className="order-1 md:order-2 flex justify-center">
+                        <div className="relative w-full max-w-md h-96 rounded-2xl shadow-lg overflow-hidden transform rotate-2 hover:rotate-0 transition-transform duration-500">
+                            <Image
+                                src="https://images.unsplash.com/photo-1466781783310-a2ac7d6f6028?auto=format&fit=crop&q=80&w=800"
+                                alt="Botani Nursery"
+                                fill
+                                className="object-cover"
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Section 2: Our Philosophy */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-24 items-center" style={{ marginBottom: '120px' }}>
+                    <div className="flex justify-center">
+                        <div className="relative w-full max-w-md h-96 rounded-2xl shadow-lg overflow-hidden transform -rotate-2 hover:rotate-0 transition-transform duration-500">
+                            <Image
+                                src="https://images.unsplash.com/photo-1614594975525-e45190c55d0b?auto=format&fit=crop&q=80&w=800"
+                                alt="Plant Care"
+                                fill
+                                className="object-cover"
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            />
+                        </div>
+                    </div>
+                    <div>
+                        <h2 className="text-3xl font-heading font-semibold text-primary mb-8">Living Art</h2>
+                        <div className="w-16 h-1 bg-primary/20 mb-10"></div>
+                        <p className="text-lg text-gray-600 leading-relaxed mb-8">
+                            We believe plants are more than just decoration; they are living sculptures that breathe life into a space. Our curation process is rigorous—we look for perfect form, unique variegation, and robust health.
+                        </p>
+                        <p className="text-lg text-gray-600 leading-relaxed">
+                            Every plant you receive from Botani is a testament to our commitment to quality. We don't just sell plants; we share a piece of nature's artistry.
+                        </p>
+                    </div>
+                </div>
+
+                {/* Values - Simple Grid */}
+                <div className="bg-gray-50 rounded-3xl px-12 md:px-24 text-center" style={{ paddingTop: '100px', paddingBottom: '100px' }}>
+                    <h2 className="text-3xl font-heading font-semibold text-primary mb-20">Why Choose Botani?</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-20">
+                        <div className="group">
+                            <div className="w-20 h-20 bg-white text-primary rounded-full flex items-center justify-center mx-auto mb-8 shadow-sm group-hover:scale-110 transition-transform duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
+                            </div>
+                            <h3 className="text-xl font-semibold text-gray-900 mb-4">Quality Guarantee</h3>
+                            <p className="text-gray-500 leading-relaxed">Healthy arrival guaranteed or your money back.</p>
+                        </div>
+                        <div className="group">
+                            <div className="w-20 h-20 bg-white text-primary rounded-full flex items-center justify-center mx-auto mb-8 shadow-sm group-hover:scale-110 transition-transform duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M2 12h20" /></svg>
+                            </div>
+                            <h3 className="text-xl font-semibold text-gray-900 mb-4">Global Shipping</h3>
+                            <p className="text-gray-500 leading-relaxed">Expert packaging for safe international delivery.</p>
+                        </div>
+                        <div className="group">
+                            <div className="w-20 h-20 bg-white text-primary rounded-full flex items-center justify-center mx-auto mb-8 shadow-sm group-hover:scale-110 transition-transform duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" /><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" /><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" /><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" /></svg>
+                            </div>
+                            <h3 className="text-xl font-semibold text-gray-900 mb-4">Sustainable</h3>
+                            <p className="text-gray-500 leading-relaxed">Eco-friendly practices from farm to doorstep.</p>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-
-            {/* Narrative Section - Split Layout */}
-            <section className="py-32 px-6 md:px-12 max-w-7xl mx-auto">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-                    <div className="space-y-8">
-                        <h2 className="text-4xl md:text-5xl font-heading font-bold text-primary leading-tight">
-                            Rooted in Passion, <br />Growing with Purpose.
-                        </h2>
-                        <div className="w-20 h-1 bg-secondary"></div>
-                        <p className="text-lg text-text-muted leading-relaxed">
-                            Botani was born from a deep reverence for the unique biodiversity of the Indonesian archipelago. What began as a humble family nursery in the misty highlands of West Java has blossomed into a premier botanical atelier.
-                        </p>
-                        <p className="text-lg text-text-muted leading-relaxed">
-                            We don't just sell plants; we curate living sculptures. Each specimen is hand-selected for its vigor, variegation, and architectural form, ensuring that it transforms from a plant into a centerpiece of your space.
-                        </p>
-
-                        <div className="pt-8 grid grid-cols-2 gap-8">
-                            <div>
-                                <h4 className="text-4xl font-heading font-bold text-primary mb-2">500+</h4>
-                                <p className="text-sm text-text-muted uppercase tracking-wider">Rare Species</p>
-                            </div>
-                            <div>
-                                <h4 className="text-4xl font-heading font-bold text-primary mb-2">15+</h4>
-                                <p className="text-sm text-text-muted uppercase tracking-wider">Global Destinations</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="relative">
-                        <div className="absolute -top-10 -left-10 w-full h-full border-2 border-primary/10 rounded-2xl z-0"></div>
-                        <img
-                            src="https://images.unsplash.com/photo-1614594975525-e45190c55d0b?auto=format&fit=crop&q=80&w=800"
-                            alt="Rare Monstera"
-                            className="relative z-10 w-full h-[600px] object-cover rounded-2xl shadow-2xl"
-                        />
-                        <div className="absolute -bottom-10 -right-10 bg-white p-8 rounded-xl shadow-xl z-20 max-w-xs hidden md:block">
-                            <p className="font-heading text-xl text-primary italic">"Nature is not a place to visit. It is home."</p>
-                            <p className="text-sm text-text-muted mt-4">— Gary Snyder</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Values Grid */}
-            <section className="bg-primary text-white py-32 px-6">
-                <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-20">
-                        <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">The Botani Standard</h2>
-                        <p className="text-white/70 max-w-2xl mx-auto text-lg">
-                            We adhere to the strictest standards of cultivation and export, ensuring that your plant arrives not just alive, but thriving.
-                        </p>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-                        <div className="bg-white/5 backdrop-blur-sm p-10 rounded-2xl border border-white/10 hover:bg-white/10 transition-colors duration-300">
-                            <div className="w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center mb-6 text-accent">
-                                <Leaf size={32} />
-                            </div>
-                            <h3 className="text-2xl font-heading font-bold mb-4">Ethical Sourcing</h3>
-                            <p className="text-white/70 leading-relaxed">
-                                We partner exclusively with sustainable farms and local growers, ensuring fair trade practices and environmental stewardship in every harvest.
-                            </p>
-                        </div>
-
-                        <div className="bg-white/5 backdrop-blur-sm p-10 rounded-2xl border border-white/10 hover:bg-white/10 transition-colors duration-300">
-                            <div className="w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center mb-6 text-accent">
-                                <Award size={32} />
-                            </div>
-                            <h3 className="text-2xl font-heading font-bold mb-4">Premium Genetics</h3>
-                            <p className="text-white/70 leading-relaxed">
-                                Our collection focuses on high-quality genetics. From stable variegation to perfect fenestrations, we prioritize the traits that collectors desire.
-                            </p>
-                        </div>
-
-                        <div className="bg-white/5 backdrop-blur-sm p-10 rounded-2xl border border-white/10 hover:bg-white/10 transition-colors duration-300">
-                            <div className="w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center mb-6 text-accent">
-                                <Globe size={32} />
-                            </div>
-                            <h3 className="text-2xl font-heading font-bold mb-4">Expert Logistics</h3>
-                            <p className="text-white/70 leading-relaxed">
-                                Shipping live plants globally requires expertise. Our specialized packaging and phytosanitary process guarantees safe arrival to over 15 countries.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Visual Gallery / Commitment */}
-            <section className="py-32 px-6 max-w-7xl mx-auto">
-                <div className="rounded-3xl overflow-hidden relative h-[500px] md:h-[600px]">
-                    <img
-                        src="https://images.unsplash.com/photo-1463936575829-25148e1db1b8?auto=format&fit=crop&q=80&w=1600"
-                        alt="Sustainable Nursery"
-                        className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-center p-8">
-                        <h2 className="text-4xl md:text-6xl font-heading font-bold text-white mb-8">
-                            Sustainability at Heart
-                        </h2>
-                        <p className="text-xl text-white/90 max-w-3xl leading-relaxed mb-10">
-                            For every plant that leaves our nursery, we plant a tree in the local rainforests of Java. We are committed to a net-positive impact on our environment.
-                        </p>
-                        <button className="bg-white text-primary px-8 py-4 rounded-full font-bold hover:bg-accent transition-colors duration-300">
-                            Read Our Sustainability Report
-                        </button>
-                    </div>
-                </div>
-            </section>
         </div>
     );
 }
